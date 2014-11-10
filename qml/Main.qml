@@ -42,13 +42,19 @@ GameWindow {
         }
 
 
+
+
+        // ---------------------------------------------------
+        // Player One
+        // ---------------------------------------------------
+
         Item {
-        // Player-Body
+        // Player-Body 1
             Rectangle {
                 id: player
 
-                x: 50
-                y: 50
+                x: scene.width / 2
+                y: scene.height - 142
                 width: 42
                 height: 42
 
@@ -74,6 +80,7 @@ GameWindow {
                 width: 26
                 height: 4
                 transformOrigin: Item.Left
+                rotation: -90
                 //transformOriginPoint: Qt.point(13, 2)
 
                 color: "#ff0000"
@@ -81,7 +88,58 @@ GameWindow {
         }
 
 
-        // Projectiles
+        // ---------------------------------------------------
+        // Player Two
+        // ---------------------------------------------------
+
+        Item {
+        // Player-Body 1
+            Rectangle {
+                id: playerTwo
+
+                x: scene.width / 2
+                y: 100
+                width: 42
+                height: 42
+
+                color: "#ffaa00"
+
+                property double xVelocity
+                property double yVelocity
+
+                MovementAnimation {
+                    target: parent
+                    property: "pos"
+                    velocity: Qt.point(playerTwo.xVelocity, playerTwo.yVelocity)
+                    running: true
+                }
+            }
+
+            // Cannon
+            Rectangle {
+                id: cannonTwo
+
+                x: playerTwo.x + playerTwo.width / 2
+                y: playerTwo.y + playerTwo.height / 2 - 2
+                width: 26
+                height: 4
+                transformOrigin: Item.Left
+                rotation: 90
+                //transformOriginPoint: Qt.point(13, 2)
+
+                color: "#ff0000"
+            }
+        }
+
+
+
+
+
+
+        // ---------------------------------------------------
+        // Projectiles Player One
+        // ---------------------------------------------------
+
         Component {
             id: projectile
 
@@ -119,15 +177,61 @@ GameWindow {
         }
 
 
+        // ---------------------------------------------------
+        // Projectiles Player Two
+        // ---------------------------------------------------
+
+        Component {
+            id: projectileTwo
+
+            EntityBase {
+                entityType: "projectile"
+                id: singleProTwo
 
 
-        // Player-Movement Control-Area
+                Rectangle {
+                    color: "#ff0000"
+                    width: 10
+                    height: 10
+                }
+
+                property point destination
+                property int moveDuration
+
+                PropertyAnimation on x {
+                    from: playerTwo.x + playerTwo.width / 2
+                    to: destination.x
+                    duration: moveDuration
+                }
+
+                PropertyAnimation on y {
+                    from: playerTwo.y + playerTwo.height / 2 - 4
+                    to: destination.y
+                    duration: moveDuration
+
+                    onStopped: {
+                        console.log("did Destroy")
+                       singleProTwo.destroy()
+                    }
+                }
+            }
+        }
+
+
+
+
+        // ---------------------------------------------------
+        // Movement Control-Area Player One
+        // ---------------------------------------------------
+
         Rectangle {
             // Object properties
             id: playerMovementControlArea
 
             opacity: 0.2
             color: "#777777"
+            border.width: 4
+            border.color: "#00ff44"
 
             width: 180
             height: 180
@@ -194,13 +298,99 @@ GameWindow {
 
 
 
-        // Cannon Control-Area
+
+        // ---------------------------------------------------
+        // Movement Control Area Player Two
+        // ---------------------------------------------------
+
+        Rectangle {
+            // Object properties
+            id: playerMovementControlAreaTwo
+
+            opacity: 0.2
+            color: "#777777"
+            border.width: 4
+            border.color: "#ffaa00"
+
+            width: 180
+            height: 180
+            x: scene.width - 230
+            y: 50
+
+
+            MultiPointTouchArea {
+                anchors.fill: parent
+
+                // Javascript functions
+                function calcAngle(touchX, touchY) {
+                    var angle = Math.atan(touchY / touchX)
+
+                    // find out in which quadrant this happened.
+                    if (touchX < 0 && touchY >= 0) {
+                        // upper left quadrant
+                        angle = Math.PI - (Math.abs(angle))
+
+                    } else if (touchX < 0 && touchY < 0) {
+                        // lower left quadrant
+                        angle = Math.PI + (Math.abs(angle))
+
+                    } else if (touchX >= 0 && touchY < 0) {
+                        // lower right quadrant
+                        angle = (Math.PI * 2) - (Math.abs(angle))
+                    }
+
+                    angle = (angle * 180 / Math.PI)
+                    angle = 360 - angle
+                    console.log("angle: " + angle + ", (x: " + touchX + ", y: " + touchY + ")")
+                    playerTwo.rotation = angle
+                }
+
+
+                function calcSpeed(touchX, touchY) {
+                    playerTwo.xVelocity = touchX
+                    playerTwo.yVelocity = (touchY * -1)
+                }
+
+
+                onReleased: {
+                    console.log("PlayerCA: onReleased")
+                }
+
+                onPressed: {
+                    console.log("PlayerCA: onPressed")
+                }
+
+                onTouchUpdated: {
+                    console.log("PlayerCA: onPositionChanged")
+
+                    var x = Math.min(playerMovementControlAreaTwo.width, touchPoints[0].x)
+                    var y = Math.min(playerMovementControlAreaTwo.height, touchPoints[0].y)
+                    x = Math.max(0, x)
+                    y = Math.max(0, y)
+                    x = x - (playerMovementControlAreaTwo.width / 2)
+                    y = (y - (playerMovementControlAreaTwo.height / 2)) * (-1)
+                    calcAngle(x, y)
+                    calcSpeed(x, y)
+                }
+            }
+        }
+
+
+
+
+
+        // ---------------------------------------------------
+        // Cannon Control-Area Player One
+        // ---------------------------------------------------
+
         Rectangle {
             // Object properties
             id: cannonControlArea
 
             opacity: 0.2
             color: "#777777"
+            border.width: 4
+            border.color: "#00ff44"
 
             width: 180
             height: 180
@@ -300,6 +490,125 @@ GameWindow {
                     y = (y - (playerMovementControlArea.height / 2)) * (-1)
                     var angle = calcAngle(x, y)
                     cannon.rotation = angle
+                }
+            }
+        }
+
+
+
+
+
+        // ---------------------------------------------------
+        // Cannon Control-Area Player Two
+        // ---------------------------------------------------
+
+        Rectangle {
+            // Object properties
+            id: cannonControlAreaTwo
+
+            opacity: 0.2
+            color: "#777777"
+            border.width: 4
+            border.color: "#ffaa00"
+
+            width: 180
+            height: 180
+            x: 50
+            y: 50
+
+            property double lastTouchTime
+
+
+            MultiPointTouchArea {
+                anchors.fill: parent
+
+                // Javascript functions
+                function calcAngle(touchX, touchY) {
+                    var angle = Math.atan(touchY / touchX)
+
+                    // find out in which quadrant this happened.
+                    if (touchX < 0 && touchY >= 0) {
+                        // upper left quadrant
+                        angle = Math.PI - (Math.abs(angle))
+
+                    } else if (touchX < 0 && touchY < 0) {
+                        // lower left quadrant
+                        angle = Math.PI + (Math.abs(angle))
+
+                    } else if (touchX >= 0 && touchY < 0) {
+                        // lower right quadrant
+                        angle = (Math.PI * 2) - (Math.abs(angle))
+                    }
+
+                    angle = (angle * 180 / Math.PI)
+                    angle = 360 - angle
+                    console.log("angle: " + angle + ", (x: " + touchX + ", y: " + touchY + ")")
+                    return angle
+                }
+
+
+                onReleased: {
+                    console.log("CannonCA: onReleased")
+
+                    var nowDateValue = new Date().valueOf()
+                    var timeDiff = nowDateValue - cannonControlAreaTwo.lastTouchTime
+
+                    console.log("timeDiff: " + timeDiff);
+
+                    if (timeDiff < 120) {
+                        // it was a short touch, fire a weapon!
+
+                        console.log("angle: " + cannon.rotation)
+
+                        var xDirection = Math.cos(cannonTwo.rotation * Math.PI / 180.0)
+                        var yDirection = Math.sin(cannonTwo.rotation * Math.PI / 180.0)
+                        console.log("----------------------------------------------------------------------")
+                        console.log("----------------------------------------------------------------------")
+                        console.log("xDir: " + xDirection + ", yDir: " + yDirection)
+
+                        while ((playerTwo.x + xDirection > -5 && playerTwo.x + xDirection < scene.width + 5) &&
+                               (playerTwo.y + yDirection > -5 && playerTwo.y + yDirection < scene.height + 5)) {
+                            xDirection = xDirection * 2
+                            yDirection = yDirection * 2
+
+                            console.log("xDir: " + xDirection + ", yDir: " + yDirection)
+                        }
+
+                        xDirection = playerTwo.x + xDirection + playerTwo.width / 2
+                        yDirection = playerTwo.y + yDirection + playerTwo.height / 2 - 4
+                        var distance = Math.sqrt(xDirection * xDirection + yDirection * yDirection)
+                        var time = distance / 480 // pixel per second
+                        time = time * 1000 // milliseconds
+
+                        console.log("distance: " + distance)
+                        console.log("time: " + time)
+                        console.log("xDirection: " + xDirection + ", yDirection: " + yDirection)
+                        console.log("player.x: " + playerTwo.x + ", player.y: " + playerTwo.y)
+
+                        var destination = Qt.point(xDirection, yDirection)
+
+                        console.log("point.x: " + destination.x + ", point.y: " + destination.y)
+
+                        entityManager.createEntityFromComponentWithProperties(projectileTwo, {"destination" : destination, "moveDuration" : time})
+                    }
+                }
+
+                onPressed: {
+                    console.log("CannonCA: onPressed")
+                    cannonControlAreaTwo.lastTouchTime = new Date().valueOf()
+                }
+
+                onTouchUpdated: {
+                    console.log("CannonCA: onPositionChanged")
+
+                    var x = Math.min(playerMovementControlAreaTwo.width, touchPoints[0].x)
+                    var y = Math.min(playerMovementControlAreaTwo.height, touchPoints[0].y)
+                    x = Math.max(0, x)
+                    y = Math.max(0, y)
+                    x = x - (playerMovementControlAreaTwo.width / 2)
+                    y = (y - (playerMovementControlAreaTwo.height / 2)) * (-1)
+                    var angle = calcAngle(x, y)
+                    cannonTwo.rotation = angle
                 }
             }
         }
