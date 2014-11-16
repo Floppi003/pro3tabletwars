@@ -52,3 +52,9 @@ ios {
     OTHER_FILES += $$QMAKE_INFO_PLIST
 }
 
+OTHER_FILES += \
+    Wall.qml \
+    Level.qml \
+    Tank.qml \
+    Bullet.qml
+

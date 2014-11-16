@@ -61,7 +61,10 @@ GameWindow {
             source: "../assets/img/null"
             thumbSource: "../assets/img/null"
 
+
+            // Touch Methods
             property variant playerTwoAxisController: level.tankRed.getComponent("TwoAxisController")
+
             onControllerXPositionChanged: {
                 playerTwoAxisController.xAxis = controllerXPosition
                 var angle = calcAngle(controllerXPosition, controllerYPosition)
@@ -76,6 +79,10 @@ GameWindow {
                 level.tankRed.boxCollider.rotation = angle
             }
 
+
+
+
+            // Custom Javascript Functions
             function calcAngle(touchX, touchY) {
 
                 console.log("touchX: " + touchX + ", touchY: " + touchY)
