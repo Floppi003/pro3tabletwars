@@ -57,13 +57,5 @@ OTHER_FILES += \
     Level.qml \
     Tank.qml \
     Bullet.qml \
-    GameController.qml \
-    MenuScene.qml \
-    SelectLevelScene.qml \
-    CreditsScene.qml \
-    GameScene.qml \
-    MenuButton.qml \
-    SceneBase.qml \
-    LevelBase.qml \
-    Level1.qml
+    GameController.qml
 

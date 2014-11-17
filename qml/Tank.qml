@@ -16,11 +16,10 @@ EntityBase {
         id: twoAxisController
     }
 
-    Image {
+    Rectangle {
         id: tankBody
         width: 40
         height: 40
-        rotation: -90
         anchors.centerIn: parent
     }
 
