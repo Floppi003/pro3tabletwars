@@ -10,6 +10,10 @@ Common.LevelBase {
     height: 1024
     width: 768
 
+    property alias scene : scene
+
+
+
     // physics world for collision detection
     PhysicsWorld {
         id: world
