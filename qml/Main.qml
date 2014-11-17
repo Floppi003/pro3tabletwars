@@ -2,6 +2,7 @@ import VPlay 2.0
 import QtQuick 2.0
 import "scenes"
 import "levels"
+import "common"
 
 GameWindow {
     //id: gameWindow
@@ -36,13 +37,14 @@ GameWindow {
 
     id: window
 
-    activeScene: scene.scene
-    //activeScene: menuScene
+    //activeScene: scene
+    activeScene: menuScene
 
     // create and remove entities at runtime
     EntityManager {
         id: entityManager
     }
+
 
     // menu scene
     MenuScene {
@@ -88,6 +90,11 @@ GameWindow {
         onBackPressed: window.state = "selectLevel"
     }
 
+    MenuButton {
+        text: "Levels"
+        onClicked: window.state = "selectLevel"
+    }
+
     // menuScene is our first scene, so set the state to menu initially
     state: "menu"
 
@@ -95,8 +102,8 @@ GameWindow {
     states: [
         State {
             name: "menu"
-            PropertyChanges {target: menuScene; opacity: 1}
-            PropertyChanges {target: window; activeScene: menuScene}
+            PropertyChanges {target: scene; opacity: 1}
+            PropertyChanges {target: window; activeScene: scene}
         },
         State {
             name: "selectLevel"

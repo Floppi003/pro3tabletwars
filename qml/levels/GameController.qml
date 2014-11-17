@@ -4,13 +4,7 @@ import "../common" as Common
 import ".."
 
 Common.LevelBase {
-    levelName: "Level1"
-    id: scene
-    // the "logical size" - the scene content is auto-scaled to match the GameWindow size
-    height: 1024
-    width: 768
-
-    property alias scene : scene
+    //levelName: "Level1"
 
 
 
