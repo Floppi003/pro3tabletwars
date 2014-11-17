@@ -56,5 +56,6 @@ OTHER_FILES += \
     Wall.qml \
     Level.qml \
     Tank.qml \
-    Bullet.qml
+    Bullet.qml \
+    GameController.qml
 
