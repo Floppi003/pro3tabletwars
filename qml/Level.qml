@@ -1,7 +1,6 @@
 import QtQuick 2.0
 import VPlay 2.0
 
-
 Item {
     id: level
     width: parent.width
@@ -19,12 +18,14 @@ Item {
 
     Tank {
         id: tankRed
+        width: 40
+        height: 40
         x: scene.width / 2
         y: 100
 
         // rotation in degrees clockwise
         rotation: 0
-        tankBody.color: "#ff0000"
+        tankBody.source: "../gfx/charRed.png"
     }
 
     Tank {
@@ -33,7 +34,7 @@ Item {
         y: scene.height - 120
 
         rotation: 0
-        tankBody.color: "#0000ff"
+        tankBody.source: "../gfx/charBlue.png"
     }
 
     Wall {

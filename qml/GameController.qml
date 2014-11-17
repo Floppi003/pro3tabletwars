@@ -188,7 +188,7 @@ Scene {
         }
 
         // delete the default images
-        source: "../assets/img/null"
+        //source: "../assets/img/null"
         thumbSource: "../assets/img/null"
 
         property variant playerTwoAxisController: level.tankBlue.getComponent("TwoAxisController")
