@@ -1,6 +1,7 @@
 import VPlay 2.0
 import QtQuick 2.0
 import "scenes"
+import "levels"
 
 GameWindow {
     //id: gameWindow
@@ -29,9 +30,14 @@ GameWindow {
     height: 2048
     width: 1536
 
-
+    GameController {
+        id: scene
+    }
 
     id: window
+
+    activeScene: scene.scene
+    //activeScene: menuScene
 
     // create and remove entities at runtime
     EntityManager {
@@ -84,7 +90,6 @@ GameWindow {
 
     // menuScene is our first scene, so set the state to menu initially
     state: "menu"
-    activeScene: menuScene
 
     // state machine, takes care reversing the PropertyChanges when changing the state, like changing the opacity back to 0
     states: [
