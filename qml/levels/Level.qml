@@ -1,8 +1,10 @@
 import QtQuick 2.0
 import VPlay 2.0
-
+import "../common" as Common
+import ".."
 
 Item {
+    //levelName: "Level1"
     id: level
     width: parent.width
     height: parent.height

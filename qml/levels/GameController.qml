@@ -1,7 +1,10 @@
 import QtQuick 2.0
 import VPlay 2.0
+import "../common" as Common
+import ".."
 
-Scene {
+Common.LevelBase {
+    levelName: "Level1"
     id: scene
     // the "logical size" - the scene content is auto-scaled to match the GameWindow size
     height: 1024
